@@ -1,0 +1,107 @@
+# the global configuration for git
+
+
+# Who is this? {{{
+[user]
+    ; do NOT guess defaults for <user | <author, commit>>.<name | email>,
+    ; instead, exclusively rely on values specified in the config-file
+    useConfigOnly = true
+
+    ; global GPG-Key Fingerprint of the 4096-bit key to sign with
+    signingKey = 09C473D52CA4A066F5AD54367FBE4C58A32DF105
+    ; global GPG-Key Fingerprint of the 2048-bit key to sign with
+    ;       signingKey = 79C6152141A54B4750DA876D01F58429170B3062
+
+; for author only
+[author]
+    name = ShC
+    email = shc@Thi.nX
+
+; committer AND tagger
+[committer]
+    name = Shengdi Chen
+    email = shengdichen@pm.me
+# }}}
+
+[merge]
+    ; the tried and true style for conflict resolving
+    conflictstyle = diff3
+    ; use vimdiff as the default merge tool
+    tool = vimdiff
+
+[push]
+    ; |upstream| removes the extra safety measure of the default |simple| that
+    ; refuses pushing to upstream's branch of a different name than the local
+    ; branch where the push originates
+    ;|      default = upstream
+    default = simple
+
+[color]
+    ; globally enable colored outputs
+    ui = true
+
+[core]
+    editor = nvim
+
+[alias]
+# {{{
+    st = status
+
+    ci = commit
+
+    co = checkout
+    br = branch
+
+    df = diff
+    dc = diff --cached
+
+    ; view detailed information of a commit
+    ;   Commit Limiting:
+    ;       1.  list all other references in ./.git/refs/
+    ;           ->  --all
+    ;       2.  list all objects mentioned by |git reflog|
+    ;           ->  --reflog
+    ;       0.  other handy options
+    ;           a.  maximal number of commits to output
+    ;                   -n <number>
+    ;   Commit Formatting:
+    ;       1.  print the contents of the commit logs in a given format
+    ;           ->  pretty=fuller
+    ;       2.  show the full 40-byte hex-code of every commit object
+    ;       3.  use ISO 8601 format
+    ;           ->  --date=iso | --date=iso8601
+    ;       4.  draw a text-based graph of the commit history
+    ;           ->  --graph
+    ;       0   other handy options
+    ;           a.  combine --pretty=oneline and --abbrev-commit:
+    ;               ->  --oneline
+    ;   Diff Options:
+    ;       1.  generate patch, i.e., actual contents of diff
+    ;           ->  --patch | -p
+    ;       2.  show <n> lines of context instead of the usual 3
+    ;           ->  --unified=<n> | -U<n>
+    ;       3.  generate a diffstat, i.e., an overview of diff
+    ;           ->  --stat
+    ;       4.  Separate the commits with NULs instead of with new newlines
+    ;           ->  -z
+    ;
+
+    ; full history
+    lg = log \
+        --all --reflog \
+        --pretty=fuller --no-abbrev-commit --date=iso8601 --graph \
+        --patch --unified=5 --stat -z \
+        --
+
+    ; short history
+    lo = log \
+        --all \
+        --oneline --graph
+
+
+    ; show single commit
+    so = show \
+        --pretty=fuller --date=iso8601 \
+        --unified=5 --stat
+# }}}
+
