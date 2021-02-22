@@ -23,6 +23,10 @@
     email = shengdichen@pm.me
 # }}}
 
+[init]
+    ; init to the master branch
+    defaultBranch = master
+
 [merge]
     ; the tried and true style for conflict resolving
     conflictstyle = diff3
