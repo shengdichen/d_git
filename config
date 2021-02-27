@@ -27,6 +27,10 @@
     ; init to the master branch
     defaultBranch = master
 
+[status]
+    ; display detailed changes in submodules
+    submoduleSummary = true
+
 [merge]
     ; the tried and true style for conflict resolving
     conflictstyle = diff3
