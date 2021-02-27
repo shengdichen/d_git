@@ -37,6 +37,9 @@
     ; use vimdiff as the default merge tool
     tool = vimdiff
 
+[mergetool "vimdiff"]
+    path = nvim
+
 [push]
     ; |upstream| removes the extra safety measure of the default |simple| that
     ; refuses pushing to upstream's branch of a different name than the local
