@@ -40,6 +40,10 @@
 [mergetool "vimdiff"]
     path = nvim
 
+[mergetool]
+    ; prompt for setting mergetool every time
+    prompt = true
+
 [push]
     ; |upstream| removes the extra safety measure of the default |simple| that
     ; refuses pushing to upstream's branch of a different name than the local
