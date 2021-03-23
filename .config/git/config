@@ -62,6 +62,10 @@
 # {{{
     st = status
 
+    ad = add
+    ap = add -p
+    ai = add -i
+
     ci = commit
 
     co = checkout
