@@ -63,6 +63,8 @@
     st = status
 
     ad = add
+    ; formalism to add new file(s), but none of the contents
+    an = add -N
     ap = add -p
     ai = add -i
 
