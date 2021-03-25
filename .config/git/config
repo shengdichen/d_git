@@ -64,7 +64,7 @@
 
     ad = add
     ; formalism to add new file(s), but none of the contents
-    an = add -N
+    an = add -N -f
     ap = add -p
     ai = add -i
 
