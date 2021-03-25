@@ -61,6 +61,7 @@
 [alias]
 # {{{
     st = status
+    ls = ls-files
 
     ad = add
     ; formalism to add new file(s), but none of the contents
