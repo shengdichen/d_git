@@ -124,5 +124,8 @@
     so = show \
         --pretty=fuller --date=iso8601 \
         --unified=5 --stat
+
+    ts = tag -s
+    ta = tag -a
 # }}}
 
