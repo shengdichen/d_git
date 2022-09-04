@@ -14,13 +14,13 @@
 
 ; for author only
 [author]
-    name = ShC
-    email = shc@Thi.nX
+    name = shc
+    email = sh@c
 
 ; committer AND tagger
 [committer]
-    name = Shengdi Chen
-    email = shengdichen@pm.me
+    name = Shengdi 'shc' Chen
+    email = me@shengdichen.xyz
 # }}}
 
 [init]
