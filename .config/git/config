@@ -144,6 +144,10 @@
 
     ts = tag -s
     ta = tag -a
+
+    re = rebase
+    ri = rebase -i
+    ro = rebase -i --onto
 # }}}
 
 # vim: foldmethod=marker
