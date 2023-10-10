@@ -10,7 +10,7 @@
     # RSA-4096
     # signingKey = 09C473D52CA4A066F5AD54367FBE4C58A32DF105
 
-# for author only
+# author
 [author]
     name = shc
     email = sh@c
@@ -52,11 +52,7 @@
     prompt = true
 
 [push]
-    # |upstream| removes the extra safety measure of the default |simple| that
-    # refuses pushing to upstream's branch of a different name than the local
-    # branch where the push originates
-    #|      default = upstream
-    default = simple
+    default = current
 
 [color]
     ui = always
