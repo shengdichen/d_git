@@ -152,6 +152,8 @@
     me = merge
     mf = merge --no-ff
     mm = merge --no-ff @{-1}  ; previously checked-out branch
+
+    cp = cherry-pick
 # }}}
 
 # vim: foldmethod=marker
