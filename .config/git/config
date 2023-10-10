@@ -148,6 +148,10 @@
     re = rebase
     ri = rebase -i
     ro = rebase -i --onto
+
+    me = merge
+    mf = merge --no-ff
+    mm = merge --no-ff @{-1}  ; previously checked-out branch
 # }}}
 
 # vim: foldmethod=marker
