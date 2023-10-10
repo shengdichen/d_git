@@ -71,6 +71,8 @@
 [core]
     editor = nvim
 
+    commentChar = "#"
+
     ; track the executable-bit
     filemode = true
 
