@@ -77,14 +77,15 @@
     ai = add -i
     au = add -u
 
-    ci = commit
-
     co = checkout
     br = branch
     cb = co -b
 
     df = diff
     dc = diff --cached
+    sth = stash
+    stp = stash pop
+    ci = commit
 
     # view detailed information of a commit
     #   Commit Limiting:
@@ -115,7 +116,10 @@
     #           ->  --stat
     #       4.  Separate the commits with NULs instead of with new newlines
     #           ->  -z
-    #
+
+    so = show \
+        --pretty=fuller --date=iso8601 \
+        --unified=5 --patch --stat
 
     # full history
     lg = log \
@@ -129,27 +133,16 @@
         --all \
         --oneline --graph
 
-
-    ; show single commit
-    so = show \
-        --pretty=fuller --date=iso8601 \
-        --unified=5 --patch --stat
-
-    ts = tag -s
-    ta = tag -a
-
-    re = rebase
-    ri = rebase -i
-    ro = rebase -i --onto
-
     me = merge
     mf = merge --no-ff
     mm = merge --no-ff @{-1}  # previously checked-out branch
-
+    re = rebase
+    ri = rebase -i
+    ro = rebase -i --onto
     cp = cherry-pick
 
-    sth = stash
-    stp = stash pop
+    ts = tag -s
+    ta = tag -a
 # }}}
 
 # vim: foldmethod=marker
