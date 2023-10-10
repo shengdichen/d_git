@@ -24,8 +24,7 @@
 # }}}
 
 [init]
-    ; init to the master branch
-    defaultBranch = master
+    defaultBranch = main
 
 [status]
     ; display detailed changes in submodules
