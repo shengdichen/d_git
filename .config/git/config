@@ -24,12 +24,19 @@
 # }}}
 
 [init]
-    ; init to the master branch
-    defaultBranch = master
+    defaultBranch = main
+
+[advice]
+    statusHints = false
+    detachedHead = false
 
 [status]
-    ; display detailed changes in submodules
+    ; display log-style changes in submodules
     submoduleSummary = true
+
+[diff]
+    ; display log-style changes in submodules
+    submodule = log
 
 [merge]
     ; the tried and true style for conflict resolving
@@ -124,9 +131,10 @@
     ; show single commit
     so = show \
         --pretty=fuller --date=iso8601 \
-        --unified=5 --stat
+        --unified=5 --patch --stat
 
     ts = tag -s
     ta = tag -a
 # }}}
 
+# vim: foldmethod=marker
