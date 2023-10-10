@@ -1,16 +1,14 @@
 # the global configuration for git
 
-
-# Who is this? {{{
+# id {{{
 [user]
-    ; do NOT guess defaults for <user | <author, commit>>.<name | email>,
-    ; instead, exclusively rely on values specified in the config-file
+    # do not guess id
     useConfigOnly = true
 
-    ; ECC
+    # ECC
     signingKey = F7A40E4EE148AC801B1509FD5163F032DF111539
-    ; RSA-4096
-    ; signingKey = 09C473D52CA4A066F5AD54367FBE4C58A32DF105
+    # RSA-4096
+    # signingKey = 09C473D52CA4A066F5AD54367FBE4C58A32DF105
 
 ; for author only
 [author]
@@ -33,28 +31,24 @@
 [status]
     ; display log-style changes in submodules
     submoduleSummary = true
-    ; prepend every line with |#|
+    ; prepend every line with |core.commentChar|
     displayCommentPrefix = true
 
 [diff]
     ; display log-style changes in submodules
     submodule = log
-    ; e.g., i/<my_file> for |I|ndex; w/ for |Working-Tree|
     mnemonicPrefix
-    ; the preferred way to view differences
     algorithm = histogram
 
 [merge]
-    ; the tried and true style for conflict resolving
     conflictstyle = diff3
-    ; use vimdiff as the default merge tool
     tool = vimdiff
 
 [mergetool "vimdiff"]
     path = nvim
 
 [mergetool]
-    ; prompt for setting mergetool every time
+    ; prompt for mergetool every time
     prompt = true
 
 [push]
@@ -65,8 +59,7 @@
     default = simple
 
 [color]
-    ; globally enable colored outputs
-    ui = true
+    ui = always
 
 [core]
     editor = nvim
@@ -76,14 +69,13 @@
     ; track the executable-bit
     filemode = true
 
-[alias]
-# {{{
+[alias] # {{{
     st = status
     ls = ls-files
 
     ad = add
     af = add -f
-    ; formalism to add new file(s), but none of the contents
+    ; make aware of the file, but do not add content yet
     an = add -N -f
     ap = add -p
     ai = add -i
