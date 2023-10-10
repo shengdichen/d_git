@@ -77,10 +77,12 @@
     ls = ls-files
 
     ad = add
+    af = add -f
     ; formalism to add new file(s), but none of the contents
     an = add -N -f
     ap = add -p
     ai = add -i
+    au = add -u
 
     ci = commit
 
