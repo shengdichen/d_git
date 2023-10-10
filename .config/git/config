@@ -131,7 +131,7 @@
     ; show single commit
     so = show \
         --pretty=fuller --date=iso8601 \
-        --unified=5 --stat
+        --unified=5 --patch --stat
 
     ts = tag -s
     ta = tag -a
