@@ -31,8 +31,12 @@
     detachedHead = false
 
 [status]
-    ; display detailed changes in submodules
+    ; display log-style changes in submodules
     submoduleSummary = true
+
+[diff]
+    ; display log-style changes in submodules
+    submodule = log
 
 [merge]
     ; the tried and true style for conflict resolving
