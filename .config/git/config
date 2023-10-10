@@ -33,10 +33,16 @@
 [status]
     ; display log-style changes in submodules
     submoduleSummary = true
+    ; prepend every line with |#|
+    displayCommentPrefix = true
 
 [diff]
     ; display log-style changes in submodules
     submodule = log
+    ; e.g., i/<my_file> for |I|ndex; w/ for |Working-Tree|
+    mnemonicPrefix
+    ; the preferred way to view differences
+    algorithm = histogram
 
 [merge]
     ; the tried and true style for conflict resolving
