@@ -33,10 +33,16 @@
 [status]
     ; display log-style changes in submodules
     submoduleSummary = true
+    ; prepend every line with |#|
+    displayCommentPrefix = true
 
 [diff]
     ; display log-style changes in submodules
     submodule = log
+    ; e.g., i/<my_file> for |I|ndex; w/ for |Working-Tree|
+    mnemonicPrefix
+    ; the preferred way to view differences
+    algorithm = histogram
 
 [merge]
     ; the tried and true style for conflict resolving
@@ -71,15 +77,18 @@
     ls = ls-files
 
     ad = add
+    af = add -f
     ; formalism to add new file(s), but none of the contents
     an = add -N -f
     ap = add -p
     ai = add -i
+    au = add -u
 
     ci = commit
 
     co = checkout
     br = branch
+    cb = co -b
 
     df = diff
     dc = diff --cached
@@ -135,6 +144,19 @@
 
     ts = tag -s
     ta = tag -a
+
+    re = rebase
+    ri = rebase -i
+    ro = rebase -i --onto
+
+    me = merge
+    mf = merge --no-ff
+    mm = merge --no-ff @{-1}  ; previously checked-out branch
+
+    cp = cherry-pick
+
+    sth = stash
+    stp = stash pop
 # }}}
 
 # vim: foldmethod=marker
