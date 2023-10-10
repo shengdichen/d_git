@@ -7,20 +7,20 @@
     ; instead, exclusively rely on values specified in the config-file
     useConfigOnly = true
 
-    ; global GPG-Key Fingerprint of the 4096-bit key to sign with
-    signingKey = 09C473D52CA4A066F5AD54367FBE4C58A32DF105
-    ; global GPG-Key Fingerprint of the 2048-bit key to sign with
-    ;       signingKey = 79C6152141A54B4750DA876D01F58429170B3062
+    ; ECC
+    signingKey = F7A40E4EE148AC801B1509FD5163F032DF111539
+    ; RSA-4096
+    ; signingKey = 09C473D52CA4A066F5AD54367FBE4C58A32DF105
 
 ; for author only
 [author]
-    name = ShC
-    email = shc@Thi.nX
+    name = shc
+    email = sh@c
 
 ; committer AND tagger
 [committer]
-    name = Shengdi Chen
-    email = shengdichen@pm.me
+    name = Shengdi 'shc' Chen
+    email = me@shengdichen.xyz
 # }}}
 
 [init]
