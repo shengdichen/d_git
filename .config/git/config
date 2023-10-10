@@ -130,3 +130,4 @@
     ta = tag -a
 # }}}
 
+# vim: foldmethod=marker
