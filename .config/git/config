@@ -154,6 +154,9 @@
     mm = merge --no-ff @{-1}  ; previously checked-out branch
 
     cp = cherry-pick
+
+    sth = stash
+    stp = stash pop
 # }}}
 
 # vim: foldmethod=marker
