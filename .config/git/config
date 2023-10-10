@@ -26,6 +26,10 @@
 [init]
     defaultBranch = main
 
+[advice]
+    statusHints = false
+    detachedHead = false
+
 [status]
     ; display detailed changes in submodules
     submoduleSummary = true
