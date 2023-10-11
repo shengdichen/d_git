@@ -1,5 +1,6 @@
 [Include]
     path = conf/id.conf
-    path = conf/inspect.conf
     path = conf/general.conf
-    path = conf/bind.conf
+    path = conf/commit_pre.conf
+    path = conf/commit_post.conf
+    path = conf/inspect.conf
