@@ -3,8 +3,7 @@ path = conf/id.conf
 
 [Include]
 path = conf/general.conf
-path = conf/commit_pre.conf
-path = conf/commit_post.conf
+path = conf/commit.conf
 path = conf/inspect.conf
 
 path = conf/color.conf
