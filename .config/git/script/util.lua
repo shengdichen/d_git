@@ -3,6 +3,19 @@ local U = {}
 U["BR_MAIN"] = "main"
 U["BR_PREV"] = "@{-1}"
 
+local function retval(cmd)
+    local res
+    local p = io.popen(cmd)
+    if p ~= nil then
+        for l in p:lines() do
+            res = l
+            break
+        end
+        p:close()
+    end
+    return res
+end
+
 U.has_untracked = function(opt)
     return not os.execute("git ls-files --others --exclude-standard")
 end
@@ -30,16 +43,7 @@ U.branchname = function(commit)
     if commit == "" then
         commit = "HEAD"
     end
-    local br_name
-    local p = io.popen("git rev-parse --abbrev-ref " .. commit)
-    if p ~= nil then
-        for l in p:lines() do
-            br_name = l -- will only return one value
-            break
-        end
-        p:close()
-    end
-    return br_name
+    return retval("git rev-parse --abbrev-ref " .. commit)
 end
 
 U.need_stash = function()
@@ -61,6 +65,12 @@ U.do_within_stash = function(f)
     else
         f()
     end
+end
+
+U.select_branch = function()
+    return retval(
+        "git br -a  --no-color --no-column | fzf | sed " .. [["s/^\*\?\s*\(\S*\).*/\1/"]]
+    )
 end
 
 return U

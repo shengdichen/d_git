@@ -41,6 +41,7 @@ local function rehead(br_to)
 end
 
 local function checkout_force(br, target)
+    br = br or util.select_branch()
     target = target or "HEAD"
 
     util.exec_git({
