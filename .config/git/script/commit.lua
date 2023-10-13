@@ -24,9 +24,38 @@ local function merge_current(br)
     )
 end
 
+local function rehead(br_to)
+    local br_tmp = "__TMP"
+    local br_from = util.branchname("HEAD")
+
+    util.exec_git({
+        "cb " .. br_tmp,
+        "br -f " .. br_from .. " " .. br_to,
+    })
+    util.do_within_stash(
+        function() util.exec_git({ "co " .. br_from, }) end
+    )
+    util.exec_git({
+        "br -D " .. br_tmp
+    })
+end
+
+local function checkout_force(br, target)
+    target = target or "HEAD"
+
+    util.exec_git({
+        "br -f " .. br .. " " .. target,
+        "co " .. br,
+    })
+end
+
 local function main(arg)
     if arg[1] == "mm" then
         merge_current(arg[2])
+    elseif arg[1] == "bf" then
+        rehead(arg[2])
+    elseif arg[1] == "cc" then
+        checkout_force(arg[2], arg[3])
     else
         print("Enter correct mode, exiting")
         os.exit(1)
