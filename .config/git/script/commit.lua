@@ -100,6 +100,8 @@ local function main(arg)
         util.add_p()
     elseif arg[1] == "ci" then
         util.commit()
+    elseif arg[1] == "ri" then
+        util.rebase()
     else
         print("Enter correct mode, exiting")
         os.exit(1)

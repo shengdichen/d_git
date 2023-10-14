@@ -129,4 +129,13 @@ U.commit = function(cmd_extra)
     U.exec_git("commit " .. (cmd_extra or ""))
 end
 
+U.rebase = function(base, cmd_extra)
+    U.do_within_stash(function()
+        base = base or U.select_commit()
+        U.exec_git(
+            "rebase -i --autosquash" .. (cmd_extra or "") .. " " .. base
+        )
+    end)
+end
+
 return U
