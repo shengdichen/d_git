@@ -42,7 +42,7 @@ end
 
 local function checkout_force(br, target)
     br = br or util.select_branch()
-    target = target or "HEAD"
+    target = br or util.select_commit()
 
     util.exec_git({
         "br -f " .. br .. " " .. target,

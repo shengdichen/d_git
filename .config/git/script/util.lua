@@ -73,4 +73,19 @@ U.select_branch = function()
     )
 end
 
+U.select_commit = function()
+    local res = retval(
+        "git alo --no-color -n 97" .. " | " ..
+        "fzf --reverse" .. " | " ..
+        "grep " .. [["\w\+"]] .. " | " ..
+        "sed " .. [=["s/^\W\+\s\(\w\+\)\s.*$/\1/"]=]
+    )
+    if not res then
+        print("Invalid commit, reselect! Exiting")
+        os.exit(1)
+    else
+        return res
+    end
+end
+
 return U
