@@ -91,4 +91,35 @@ U.select_commit = function()
     end
 end
 
+U.add_p = function()
+    if not U.check_tree("df") then
+        print("Nothing to add, done!")
+    else
+        U.exec_git("add -p")
+        local done = false
+        while not done do
+            io.write(
+                "What now? " ..
+                "(Default: [q]uit; d[c]; d[f]; [a]d; c[l]ear; [r]estart from scratch) "
+            )
+            local input = io.read()
+            if input == "" or input == "q" then
+                break
+            elseif input == "c" then
+                U.exec_git("dc")
+            elseif input == "f" then
+                U.exec_git("df")
+            elseif input == "a" then
+                U.exec_git("add -p")
+            elseif input == "l" then
+                os.execute("clear")
+            elseif input == "r" then
+                U.exec_git({ "rt", "add -p" })
+            else
+                print("Specify correct mode")
+            end
+        end
+    end
+end
+
 return U

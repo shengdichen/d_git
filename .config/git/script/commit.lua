@@ -96,6 +96,8 @@ local function main(arg)
         checkout_force(arg[2], arg[3])
     elseif arg[1] == "cf" or arg[1] == "cs" then
         rework_commit(arg[1], arg[2])
+    elseif arg[1] == "ap" then
+        util.add_p()
     else
         print("Enter correct mode, exiting")
         os.exit(1)
