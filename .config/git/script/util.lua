@@ -34,6 +34,9 @@ U.check_tree = function(mode)
 end
 
 U.exec_git = function(cmds)
+    if type(cmds) == "string" then
+        cmds = { cmds }
+    end
     for _, cmd in ipairs(cmds) do
         os.execute("git " .. cmd)
     end

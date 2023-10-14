@@ -24,13 +24,14 @@ local function merge_current(br)
     )
 end
 
-local function rehead(br_to)
+local function rehead(target)
     local br_tmp = "__TMP"
     local br_from = util.branchname("HEAD")
+    target = target or util.select_commit()
 
     util.exec_git({
         "cb " .. br_tmp,
-        "br -f " .. br_from .. " " .. br_to,
+        "br -f " .. br_from .. " " .. target,
     })
     util.do_within_stash(
         function() util.exec_git({ "co " .. br_from, }) end
@@ -40,9 +41,22 @@ local function rehead(br_to)
     })
 end
 
+local function rebranch(br_from, target)
+    local br_curr = util.branchname("HEAD")
+    br_from = br_from or util.select_branch()
+    target = target or util.select_commit()
+
+    if br_from == br_curr then
+        rehead(target)
+    else
+        util.exec_git("br -f " .. br_from .. " " .. target)
+    end
+    util.exec_git("alo")
+end
+
 local function checkout_force(br, target)
     br = br or util.select_branch()
-    target = br or util.select_commit()
+    target = target or util.select_commit()
 
     util.exec_git({
         "br -f " .. br .. " " .. target,
@@ -54,7 +68,7 @@ local function main(arg)
     if arg[1] == "mm" then
         merge_current(arg[2])
     elseif arg[1] == "bf" then
-        rehead(arg[2])
+        rebranch(arg[2])
     elseif arg[1] == "cc" then
         checkout_force(arg[2], arg[3])
     else
