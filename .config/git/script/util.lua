@@ -62,9 +62,16 @@ end
 
 U.do_within_stash = function(f)
     if U.need_stash() then
-        U.exec_git("stash")
-        f()
-        U.exec_git("stash pop")
+        io.write("Tree dirty, stash? [y]es (default), [n]o ")
+        local input = io.read()
+        if input == "n" then
+            print("Not doing anything, exiting")
+            return
+        else
+            U.exec_git("stash")
+            f()
+            U.exec_git("stash pop")
+        end
     else
         f()
     end
