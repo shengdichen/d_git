@@ -122,4 +122,11 @@ U.add_p = function()
     end
 end
 
+U.commit = function(cmd_extra)
+    if not U.check_tree("dc") then
+        U.add_p()
+    end
+    U.exec_git("commit " .. (cmd_extra or ""))
+end
+
 return U

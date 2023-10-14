@@ -80,10 +80,10 @@ local function rework_commit(mode, target)
     else
         target = target or util.select_commit()
 
-        util.exec_git({
-            "commit --" .. mode .. " " .. target,
+        util.commit("--" .. mode .. " " .. target)
+        util.exec_git(
             "rebase --autostash --autosquash -i -- " .. target .. "~"
-        })
+        )
     end
 end
 
@@ -98,6 +98,8 @@ local function main(arg)
         rework_commit(arg[1], arg[2])
     elseif arg[1] == "ap" then
         util.add_p()
+    elseif arg[1] == "ci" then
+        util.commit()
     else
         print("Enter correct mode, exiting")
         os.exit(1)
