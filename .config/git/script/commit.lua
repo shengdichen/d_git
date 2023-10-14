@@ -74,17 +74,15 @@ local function rework_commit(mode, target)
         os.exit(1)
     end
 
-    if not util.check_tree("dc") then
-        print("Nothing to commit, exiting")
-        os.exit(1)
-    else
-        target = target or util.select_commit()
-
-        util.commit("--" .. mode .. " " .. target)
-        util.exec_git(
-            "rebase --autostash --autosquash -i -- " .. target .. "~"
-        )
+    if not target or target == "" then
+        io.write("Paste-in commit; select interactively (default) ")
+        target = io.read()
+        if target == "" then
+            target = util.select_commit()
+        end
     end
+    util.commit("--" .. mode .. " " .. target)
+    util.rebase(target .. "~")
 end
 
 local function main(arg)

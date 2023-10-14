@@ -130,8 +130,12 @@ U.add_p = function()
 end
 
 U.commit = function(cmd_extra)
-    if not U.check_tree("dc") then
-        U.add_p()
+    if U.check_tree("df") then
+        io.write("Exists df, what now? [a]p; c[i] anyway (default) ")
+        local input = io.read()
+        if input == "a" then
+            U.add_p()
+        end
     end
     U.exec_git("commit " .. (cmd_extra or ""))
 end
