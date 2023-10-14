@@ -65,9 +65,6 @@ local function checkout_force(br, target)
 end
 
 local function rework_commit(mode, target)
-    target = target or util.select_commit()
-    local base = util.select_commit()
-
     if mode == "cf" then
         mode = "fixup"
     elseif mode == "cs" then
@@ -77,10 +74,17 @@ local function rework_commit(mode, target)
         os.exit(1)
     end
 
-    util.exec_git({
-        "commit --" .. mode .. " " .. target,
-        "rebase --autostash --autosquash -i -- " .. base
-    })
+    if not util.check_tree("dc") then
+        print("Nothing to commit, exiting")
+        os.exit(1)
+    else
+        target = target or util.select_commit()
+
+        util.exec_git({
+            "commit --" .. mode .. " " .. target,
+            "rebase --autostash --autosquash -i -- " .. target .. "~"
+        })
+    end
 end
 
 local function main(arg)
