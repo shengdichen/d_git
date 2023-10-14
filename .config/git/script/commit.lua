@@ -64,6 +64,25 @@ local function checkout_force(br, target)
     })
 end
 
+local function rework_commit(mode, target)
+    target = target or util.select_commit()
+    local base = util.select_commit()
+
+    if mode == "cf" then
+        mode = "fixup"
+    elseif mode == "cs" then
+        mode = "squash"
+    else
+        print("Specify commit fixup mode, exiting")
+        os.exit(1)
+    end
+
+    util.exec_git({
+        "commit --" .. mode .. " " .. target,
+        "rebase --autostash --autosquash -i -- " .. base
+    })
+end
+
 local function main(arg)
     if arg[1] == "mm" then
         merge_current(arg[2])
@@ -71,6 +90,8 @@ local function main(arg)
         rebranch(arg[2])
     elseif arg[1] == "cc" then
         checkout_force(arg[2], arg[3])
+    elseif arg[1] == "cf" or arg[1] == "cs" then
+        rework_commit(arg[1], arg[2])
     else
         print("Enter correct mode, exiting")
         os.exit(1)
