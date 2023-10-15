@@ -149,4 +149,24 @@ U.rebase = function(base, cmd_extra)
     end)
 end
 
+U.inspect = function()
+    while true do
+        io.write("Inspect, but how? [lg]; [lo]; [alg]; [alo] (default); [q]uit ")
+        local input = io.read()
+        if input == "lg" then
+            U.exec_git("log --graph --pretty=stylepatch --patch --unified=2 main..@")
+        elseif input == "lo" then
+            U.exec_git("log --graph --pretty=styleoneline main..@")
+        elseif input == "alg" then
+            U.exec_git("log --all --graph --pretty=stylepatch --patch --unified=2")
+        elseif input == "alo" or input == "" then
+            U.exec_git("log --all --graph --pretty=styleoneline")
+        elseif input == "q" then
+            break
+        else
+            print("Huh? (aka, what is " .. input .. "?)\n")
+        end
+    end
+end
+
 return U
