@@ -105,20 +105,26 @@ end
 
 local function loop()
     while true do
-        io.write("What now? [l]g (default); [a]d; [c]i; [r]e; [m]e; [df]; [dc]; [st]; [q]uit ")
+        io.write("What now? " ..
+            "[l]g (default); [a]d; [ci]; [r]e; [m]e; " ..
+            "[df]; [dc]; [st]; " ..
+            "[c]lear screen; [q]uit "
+        )
         local input = io.read()
-        if input == "l" or input == "" then
+        if input == "l" or input == "lg" or input == "" then
             util.inspect()
-        elseif input == "a" then
+        elseif input == "a" or input == "ad" then
             util.add_p()
-        elseif input == "c" then
+        elseif input == "ci" then
             commit()
-        elseif input == "r" then
+        elseif input == "r" or input == "re" then
             util.rebase()
-        elseif input == "m" then
+        elseif input == "m" or input == "me" then
             merge()
         elseif input == "df" or input == "dc" or input == "st" then
             util.exec_git(input)
+        elseif input == "c" then
+            os.execute("clear")
         elseif input == "q" then
             break
         else
