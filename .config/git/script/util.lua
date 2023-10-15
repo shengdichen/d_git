@@ -155,6 +155,16 @@ U.commit = function(mode, args)
             U.add_p()
         end
     end
+    if not U.check_tree("dc") then
+        io.write("No dc, what now? [a]p (default); [q]uit ")
+        local input = io.read()
+        if input == "q" then
+            print("No will to commit, exiting")
+            return
+        else
+            U.add_p()
+        end
+    end
     if mode == "fixup" or mode == "squash" then
         U.commit_rework(mode, args and args["target"])
     elseif mode == "" then
