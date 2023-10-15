@@ -87,7 +87,7 @@ end
 
 local function loop()
     while true do
-        io.write("What now? [l]g (default); [a]d; [c]i; [r]e; [m]e; [q]uit ")
+        io.write("What now? [l]g (default); [a]d; [c]i; [r]e; [m]e; [df]; [dc]; [st]; [q]uit ")
         local input = io.read()
         if input == "l" or input == "" then
             util.inspect()
@@ -99,6 +99,8 @@ local function loop()
             util.rebase()
         elseif input == "m" then
             merge_current()
+        elseif input == "df" or input == "dc" or input == "st" then
+            util.exec_git(input)
         elseif input == "q" then
             break
         else
