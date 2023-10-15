@@ -161,6 +161,24 @@ U.rebase = function(base, cmd_extra)
     end)
 end
 
+U.merge = function(br)
+    if br == U.BR_MAIN then
+        print("On " .. U.BR_MAIN .. " already, done!")
+        return
+    end
+
+    U.do_within_stash(
+        function()
+            U.exec_git({ "co " .. U.BR_MAIN })
+            if not os.execute("git merge --no-ff " .. br) then
+                U.exec_git({ "merge --abort", "co " .. U.BR_PREV })
+            else
+                U.exec_git({ "br -d " .. br })
+            end
+        end
+    )
+end
+
 U.inspect = function()
     while true do
         io.write("Inspect, but how? [lg]; [lo]; [alg]; [alo] (default); [q]uit ")
