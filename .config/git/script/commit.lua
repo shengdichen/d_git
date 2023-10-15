@@ -85,6 +85,26 @@ local function rework_commit(mode, target)
     util.rebase(target .. "~")
 end
 
+local function loop()
+    while true do
+        io.write("What now? [a]d; [c]i; [r]e; [m]e; [q]uit (default) ")
+        local input = io.read()
+        if input == "a" then
+            util.add_p()
+        elseif input == "c" then
+            util.commit()
+        elseif input == "r" then
+            util.rebase()
+        elseif input == "m" then
+            merge_current()
+        elseif input == "q" or input == "" then
+            break
+        else
+            print("Huh? (aka, what is " .. input .. "?)\n")
+        end
+    end
+end
+
 local function main(arg)
     if arg[1] == "mm" then
         merge_current(arg[2])
@@ -101,8 +121,7 @@ local function main(arg)
     elseif arg[1] == "ri" then
         util.rebase()
     else
-        print("Enter correct mode, exiting")
-        os.exit(1)
+        loop()
     end
 end
 main(arg)
