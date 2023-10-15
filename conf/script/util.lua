@@ -222,11 +222,16 @@ U.merge = function(br, base)
 
     U.do_within_stash(
         function()
-            U.exec_git({ "co " .. base })
-            if not os.execute("git merge --no-ff " .. br) then
-                U.exec_git({ "merge --abort", "co " .. U.BR_PREV })
-            else
-                U.exec_git({ "br -d " .. br })
+            if type(br) == "string" then
+                br = { br }
+            end
+            for _, b in ipairs(br) do
+                U.exec_git({ "co " .. base })
+                if not os.execute("git merge --no-ff " .. b) then
+                    U.exec_git({ "merge --abort", "co " .. U.BR_PREV })
+                else
+                    U.exec_git({ "br -d " .. b })
+                end
             end
         end
     )
