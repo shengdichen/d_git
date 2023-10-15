@@ -64,6 +64,22 @@ local function checkout_force(br, target)
     })
 end
 
+local function commit(args)
+    io.write("Commit mode: [c]i (default); c[f]; c[s] ")
+    local mode = io.read()
+    if mode == "" or mode == "c" then
+        mode = ""
+    elseif mode == "f" then
+        mode = "fixup"
+    elseif mode == "s" then
+        mode = "squash"
+    else
+        util.printer("huh", { input = mode })
+        return
+    end
+    util.commit(mode, args)
+end
+
 local function rework_commit(mode, target)
     if mode == "cf" then
         mode = "fixup"
@@ -94,7 +110,7 @@ local function loop()
         elseif input == "a" then
             util.add_p()
         elseif input == "c" then
-            util.commit()
+            commit()
         elseif input == "r" then
             util.rebase()
         elseif input == "m" then
@@ -121,7 +137,7 @@ local function main(arg)
     elseif arg[1] == "ap" then
         util.add_p()
     elseif arg[1] == "ci" then
-        util.commit()
+        commit()
     elseif arg[1] == "ri" then
         util.rebase()
     else

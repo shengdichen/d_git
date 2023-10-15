@@ -16,6 +16,12 @@ local function retval(cmd)
     return res
 end
 
+U.printer = function(mode, args)
+    if mode == "huh" then
+        print("Huh? (aka, what is " .. (args["input"] or "blank") .. "?)\n")
+    end
+end
+
 U.has_untracked = function(opt)
     return not os.execute("git ls-files --others --exclude-standard")
 end
@@ -129,7 +135,19 @@ U.add_p = function()
     end
 end
 
-U.commit = function(cmd_extra)
+U.commit_rework = function(mode, target)
+    if not target or target == "" then
+        io.write("Paste-in commit; select interactively (default) ")
+        target = io.read()
+        if target == "" then
+            target = U.select_commit()
+        end
+    end
+    U.exec_git("commit --" .. mode .. " " .. target)
+    U.rebase(target .. "~")
+end
+
+U.commit = function(mode, args)
     if U.check_tree("df") then
         io.write("Exists df, what now? [a]p; c[i] anyway (default) ")
         local input = io.read()
@@ -137,7 +155,14 @@ U.commit = function(cmd_extra)
             U.add_p()
         end
     end
-    U.exec_git("commit " .. (cmd_extra or ""))
+    if mode == "fixup" or mode == "squash" then
+        U.commit_rework(mode, args and args["target"])
+    elseif mode == "" then
+        U.exec_git("commit " .. (args and args["cmd_extra"] or ""))
+    else
+        print("Specify correct commit-mode, exiting")
+        os.exit(1)
+    end
 end
 
 U.rebase = function(base, cmd_extra)
