@@ -161,15 +161,15 @@ U.rebase = function(base, cmd_extra)
     end)
 end
 
-U.merge = function(br)
-    if br == U.BR_MAIN then
-        print("On " .. U.BR_MAIN .. " already, done!")
+U.merge = function(br, base)
+    if br == base then
+        print("On " .. base .. " already, done!")
         return
     end
 
     U.do_within_stash(
         function()
-            U.exec_git({ "co " .. U.BR_MAIN })
+            U.exec_git({ "co " .. base })
             if not os.execute("git merge --no-ff " .. br) then
                 U.exec_git({ "merge --abort", "co " .. U.BR_PREV })
             else

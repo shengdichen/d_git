@@ -19,12 +19,22 @@ local function rehead(target)
     })
 end
 
-local function merge(br)
+local function merge(br, base)
     if not br or br == "" then
         io.write("Merge which branch? HEAD (default), [s]elect ")
         local input = io.read()
         if input == "" then
             br = util.branchname("HEAD")
+        else
+            br = util.select_branch()
+        end
+    end
+
+    if not base or base == "" then
+        io.write("Merge base? " .. util.BR_MAIN .. " (default), [s]elect ")
+        local input = io.read()
+        if input == "" then
+            br = util.BR_MAIN
         else
             br = util.select_branch()
         end
@@ -106,7 +116,7 @@ local function loop()
         elseif input == "r" then
             util.rebase()
         elseif input == "m" then
-            merge(arg[2])
+            merge()
         elseif input == "df" or input == "dc" or input == "st" then
             util.exec_git(input)
         elseif input == "q" then
@@ -119,7 +129,7 @@ end
 
 local function main(arg)
     if arg[1] == "mm" then
-        merge(arg[2])
+        merge(arg[2], arg[3])
     elseif arg[1] == "bf" then
         rebranch(arg[2])
     elseif arg[1] == "cc" then
