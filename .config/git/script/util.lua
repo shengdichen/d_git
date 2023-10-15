@@ -90,10 +90,17 @@ U.do_within_stash = function(f)
     end
 end
 
-U.select_branch = function()
-    return retval(
-        "git br -a  --no-color --no-column | fzf | sed " .. [["s/^\*\?\s*\(\S*\).*/\1/"]]
-    )
+U.select_branch = function(args)
+    local cmd_git_list = "git br -a  --no-color --no-column | "
+    local cmd_select = "fzf | sed " .. [["s/^\*\?\s*\(\S*\).*/\1/"]]
+
+    local cmd_filter
+    local br_filter = args and args["filter"]
+    if br_filter then
+        cmd_filter = "grep " .. '"' .. br_filter .. '" | '
+    end
+
+    return retval(cmd_git_list .. (cmd_filter or "") .. cmd_select)
 end
 
 U.select_commit = function()
