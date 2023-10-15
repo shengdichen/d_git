@@ -20,8 +20,12 @@ local function rehead(target)
 end
 
 local function merge(br, base)
+    local action = "merge"
     if not br or br == "" then
-        io.write("merge> Merge which branch? HEAD (default), [s]elect ")
+        util.printer(
+            "prompt",
+            { action = action, text = "Merge which branch? HEAD (default), [s]elect " }
+        )
         local input = io.read()
         if input == "" then
             br = util.branchname("HEAD")
@@ -31,7 +35,10 @@ local function merge(br, base)
     end
 
     if not base or base == "" then
-        io.write("merge> Merge base? " .. util.BR_MAIN .. " (default), [s]elect ")
+        util.printer(
+            "prompt",
+            { action = action, text = "Merge base? " .. util.BR_MAIN .. " (default), [s]elect " }
+        )
         local input = io.read()
         if input == "" then
             br = util.BR_MAIN
@@ -67,7 +74,10 @@ local function checkout_force(br, target)
 end
 
 local function commit(args)
-    io.write("commit> Commit mode: [c]i (default); c[f]; c[s] ")
+    util.printer(
+        "prompt",
+        { action = "commit", text = "Commit mode: [c]i (default); c[f]; c[s] " }
+    )
     local mode = io.read()
     if mode == "" or mode == "c" then
         mode = ""
@@ -88,12 +98,15 @@ local function rework_commit(mode, target)
     elseif mode == "cs" then
         mode = "squash"
     else
-        print("Specify commit fixup mode, exiting")
+        util.printer("invalid", { mode = "commit-mode", resolve = "exting" })
         os.exit(1)
     end
 
     if not target or target == "" then
-        io.write("commit> Paste-in commit; select interactively (default) ")
+        util.printer(
+            "prompt",
+            { action = "commit", text = "Paste-in commit; select interactively (default) " }
+        )
         target = io.read()
         if target == "" then
             target = util.select_commit()
@@ -105,10 +118,15 @@ end
 
 local function loop()
     while true do
-        io.write("main> What now?\n" ..
-            "[l]g (default); [a]d; [ci]; [r]e; [m]e; " ..
-            "[df]; [dc]; [st]; " ..
-            "[c]lear screen; [q]uit "
+        util.printer(
+            "prompt",
+            {
+                action = "main",
+                text = "What now?\n" ..
+                    "[l]g (default); [a]d; [ci]; [r]e; [m]e; " ..
+                    "[df]; [dc]; [st]; " ..
+                    "[c]lear screen; [q]uit "
+            }
         )
         local input = io.read()
         if input == "l" or input == "lg" or input == "" then
@@ -128,7 +146,7 @@ local function loop()
         elseif input == "q" then
             break
         else
-            print("Huh? (aka, what is " .. input .. "?)\n")
+            util.printer("huh", { input = input })
         end
     end
 end

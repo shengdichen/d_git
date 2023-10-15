@@ -17,8 +17,14 @@ local function retval(cmd)
 end
 
 U.printer = function(mode, args)
-    if mode == "huh" then
+    if mode == "prompt" then
+        io.write(args["action"] .. "> " .. args["text"])
+    elseif mode == "huh" then
         print("Huh? (aka, what is " .. (args["input"] or "blank") .. "?)\n")
+    elseif mode == "giveup" then
+        print("No will to " .. args["action"] .. ", backing off")
+    elseif mode == "invalid" then
+        print("Bad " .. args["action"] .. ", " .. args["resolve"])
     end
 end
 
@@ -34,7 +40,7 @@ U.check_tree = function(mode)
     elseif mode == "dfdc" then
         return not os.execute("git diff-index --quiet HEAD --")
     else
-        print("Provide correct mode")
+        U.printer("invalid", { mode = "diff-mode", resolve = "reselect" })
         os.exit(1)
     end
 end
@@ -67,11 +73,12 @@ U.need_stash = function()
 end
 
 U.do_within_stash = function(f)
+    local action = "stash"
     if U.need_stash() then
-        io.write("stash> Tree dirty, stash? [y]es (default), [n]o ")
+        U.printer("prompt", { action = action, text = "Tree dirty, stash? [y]es (default), [n]o " })
         local input = io.read()
         if input == "n" then
-            print("Not doing anything, exiting")
+            U.printer("giveup", { action = action })
             return
         else
             U.exec_git("stash")
@@ -90,18 +97,22 @@ U.select_branch = function()
 end
 
 U.select_commit = function()
-    local res = retval(
-        "git alo --no-color -n 97" .. " | " ..
-        "fzf --reverse" .. " | " ..
-        "grep " .. [["\w\+"]] .. " | " ..
-        "sed " .. [=["s/^\W\+\s\(\w\+\)\s.*$/\1/"]=]
-    )
-    if not res then
-        print("Invalid commit, reselect! Exiting")
-        os.exit(1)
-    else
-        return res
+    local res
+    while true do
+        res = retval(
+            "git alo --no-color -n 97" .. " | " ..
+            "fzf --reverse" .. " | " ..
+            "grep " .. [["\w\+"]] .. " | " ..
+            "sed " .. [=["s/^\W\+\s\(\w\+\)\s.*$/\1/"]=]
+        )
+        if res then
+            break
+        else
+            U.printer("invalid", { mode = "commit", resolve = "reselect" })
+        end
     end
+
+    return res
 end
 
 U.add_p = function()
@@ -113,8 +124,12 @@ U.add_p = function()
 end
 
 U.commit_rework = function(mode, target)
+    local action = "commit"
     if not target or target == "" then
-        io.write("commit> Paste-in commit; select interactively (default) ")
+        U.printer(
+            "prompt",
+            { action = action, text = "Paste-in commit; select interactively (default) " }
+        )
         target = io.read()
         if target == "" then
             target = U.select_commit()
@@ -125,18 +140,25 @@ U.commit_rework = function(mode, target)
 end
 
 U.commit = function(mode, args)
+    local action = "commit"
     if U.check_tree("df") then
-        io.write("commit> Exists df, what now? [a]p; c[i] anyway (default) ")
+        U.printer(
+            "prompt",
+            { action = action, text = "Exists df, what now? [a]p; c[i] anyway (default) " }
+        )
         local input = io.read()
         if input == "a" then
             U.add_p()
         end
     end
     if not U.check_tree("dc") then
-        io.write("commit> No dc, what now? [a]p (default); [q]uit ")
+        U.printer(
+            "prompt",
+            { action = action, text = "No dc, what now? [a]p (default); [q]uit " }
+        )
         local input = io.read()
         if input == "q" then
-            print("No will to commit, exiting")
+            U.printer("giveup", { action = action })
             return
         else
             U.add_p()
@@ -147,7 +169,7 @@ U.commit = function(mode, args)
     elseif mode == "" then
         U.exec_git("commit " .. (args and args["cmd_extra"] or ""))
     else
-        print("Specify correct commit-mode, exiting")
+        U.printer("invalid", { mode = "commit-mode", resolve = "exiting" })
         os.exit(1)
     end
 end
@@ -181,7 +203,13 @@ end
 
 U.inspect = function()
     while true do
-        io.write("log> Inspect, but how? [lg]; [lo]; [alg]; [alo] (default); [q]uit ")
+        U.printer(
+            "prompt",
+            {
+                action = "log",
+                text = "Inspect, but how? [lg]; [lo]; [alg]; [alo] (default); [q]uit "
+            }
+        )
         local input = io.read()
         if input == "lg" then
             U.exec_git("log --graph --pretty=stylepatch --patch --unified=2 main..@")
@@ -194,7 +222,7 @@ U.inspect = function()
         elseif input == "q" then
             break
         else
-            print("Huh? (aka, what is " .. input .. "?)\n")
+            U.printer("huh", { input = input })
         end
     end
 end
