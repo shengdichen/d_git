@@ -21,7 +21,7 @@ end
 
 local function merge(br, base)
     if not br or br == "" then
-        io.write("Merge which branch? HEAD (default), [s]elect ")
+        io.write("merge> Merge which branch? HEAD (default), [s]elect ")
         local input = io.read()
         if input == "" then
             br = util.branchname("HEAD")
@@ -31,7 +31,7 @@ local function merge(br, base)
     end
 
     if not base or base == "" then
-        io.write("Merge base? " .. util.BR_MAIN .. " (default), [s]elect ")
+        io.write("merge> Merge base? " .. util.BR_MAIN .. " (default), [s]elect ")
         local input = io.read()
         if input == "" then
             br = util.BR_MAIN
@@ -67,7 +67,7 @@ local function checkout_force(br, target)
 end
 
 local function commit(args)
-    io.write("Commit mode: [c]i (default); c[f]; c[s] ")
+    io.write("commit> Commit mode: [c]i (default); c[f]; c[s] ")
     local mode = io.read()
     if mode == "" or mode == "c" then
         mode = ""
@@ -93,7 +93,7 @@ local function rework_commit(mode, target)
     end
 
     if not target or target == "" then
-        io.write("Paste-in commit; select interactively (default) ")
+        io.write("commit> Paste-in commit; select interactively (default) ")
         target = io.read()
         if target == "" then
             target = util.select_commit()
@@ -105,7 +105,7 @@ end
 
 local function loop()
     while true do
-        io.write("What now? " ..
+        io.write("main> What now?\n" ..
             "[l]g (default); [a]d; [ci]; [r]e; [m]e; " ..
             "[df]; [dc]; [st]; " ..
             "[c]lear screen; [q]uit "

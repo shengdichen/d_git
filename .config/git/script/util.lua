@@ -68,7 +68,7 @@ end
 
 U.do_within_stash = function(f)
     if U.need_stash() then
-        io.write("Tree dirty, stash? [y]es (default), [n]o ")
+        io.write("stash> Tree dirty, stash? [y]es (default), [n]o ")
         local input = io.read()
         if input == "n" then
             print("Not doing anything, exiting")
@@ -114,7 +114,7 @@ end
 
 U.commit_rework = function(mode, target)
     if not target or target == "" then
-        io.write("Paste-in commit; select interactively (default) ")
+        io.write("commit> Paste-in commit; select interactively (default) ")
         target = io.read()
         if target == "" then
             target = U.select_commit()
@@ -126,14 +126,14 @@ end
 
 U.commit = function(mode, args)
     if U.check_tree("df") then
-        io.write("Exists df, what now? [a]p; c[i] anyway (default) ")
+        io.write("commit> Exists df, what now? [a]p; c[i] anyway (default) ")
         local input = io.read()
         if input == "a" then
             U.add_p()
         end
     end
     if not U.check_tree("dc") then
-        io.write("No dc, what now? [a]p (default); [q]uit ")
+        io.write("commit> No dc, what now? [a]p (default); [q]uit ")
         local input = io.read()
         if input == "q" then
             print("No will to commit, exiting")
@@ -181,7 +181,7 @@ end
 
 U.inspect = function()
     while true do
-        io.write("Inspect, but how? [lg]; [lo]; [alg]; [alo] (default); [q]uit ")
+        io.write("log> Inspect, but how? [lg]; [lo]; [alg]; [alo] (default); [q]uit ")
         local input = io.read()
         if input == "lg" then
             U.exec_git("log --graph --pretty=stylepatch --patch --unified=2 main..@")
