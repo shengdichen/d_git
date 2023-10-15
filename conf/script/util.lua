@@ -2,6 +2,8 @@ local U = {}
 
 U["BR_MAIN"] = "main"
 U["BR_PREV"] = "@{-1}"
+U["USER"] = "shc"
+U["FEATURE"] = U["USER"] .. "/"
 
 local function retval(cmd)
     local res
@@ -14,6 +16,22 @@ local function retval(cmd)
         p:close()
     end
     return res
+end
+
+local function retall(cmd)
+    local res = {}
+    local p = io.popen(cmd)
+    if p ~= nil then
+        for l in p:lines() do
+            table.insert(res, l)
+        end
+        p:close()
+    end
+    return res
+end
+
+local function pipeline(cmds)
+    return table.concat(cmds, " | ")
 end
 
 U.printer = function(mode, args)
@@ -91,16 +109,22 @@ U.do_within_stash = function(f)
 end
 
 U.select_branch = function(args)
-    local cmd_git_list = "git br -a  --no-color --no-column | "
-    local cmd_select = "fzf | sed " .. [["s/^\*\?\s*\(\S*\).*/\1/"]]
+    local cmds = { "git br -a  --no-color --no-column" }
 
-    local cmd_filter
     local br_filter = args and args["filter"]
     if br_filter then
-        cmd_filter = "grep " .. '"' .. br_filter .. '" | '
+        table.insert(cmds, "grep " .. '"' .. br_filter .. '"')
     end
 
-    return retval(cmd_git_list .. (cmd_filter or "") .. cmd_select)
+    table.insert(cmds, "sed " .. [["s/^\*\?\s*\(\S*\).*/\1/"]])
+    if not args or args["fzf"] then -- default to using fzf
+        table.insert(cmds, "fzf")
+    end
+
+    if args and args["multi"] then
+        return retall(pipeline(cmds))
+    end
+    return retval(pipeline(cmds))
 end
 
 U.select_commit = function()
@@ -232,6 +256,10 @@ U.inspect = function()
             U.printer("huh", { input = input })
         end
     end
+end
+
+local function features()
+    return U.select_branch({ multi = true, filter = U["FEATURE"] })
 end
 
 return U
