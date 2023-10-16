@@ -110,7 +110,14 @@ U.do_within_stash = function(f)
 end
 
 U.select_branch = function(args)
-    local cmds = { "git br -a  --no-color --no-column" }
+    local cmds = {}
+
+    local containing = args and args["containing"]
+    if containing then
+        table.insert(cmds, "git br --contains " .. containing)
+    else
+        table.insert(cmds, "git br -a  --no-color --no-column")
+    end
 
     local br_filter = args and args["filter"]
     if br_filter then
@@ -282,6 +289,14 @@ U.merge_features = function(feats)
         U.merge(feats, U["BR_MAIN"], { no_edit = true, keep_branch = true })
     end
     )
+end
+
+local function branches_containing(commit)
+    return U.select_branch({ multi = true, containing = commit })
+end
+
+local function features_containing(commit)
+    return U.select_branch({ multi = true, containing = commit, filter = U["FEATURE"] })
 end
 
 U.transplant = function(commit, branch)
