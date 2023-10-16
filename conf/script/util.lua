@@ -274,9 +274,13 @@ local function features()
     return U.select_branch({ multi = true, filter = U["FEATURE"] })
 end
 
-local function merge_features(feats)
+U.merge_features = function(feats)
     feats = feats or features()
-    U.merge(feats, U["BR_MAIN"], { no_edit = true, keep_branch = true })
+
+    U.do_within_stash(function()
+        U.merge(feats, U["BR_MAIN"], { no_edit = true, keep_branch = true })
+    end
+    )
 end
 
 return U
