@@ -274,4 +274,9 @@ local function features()
     return U.select_branch({ multi = true, filter = U["FEATURE"] })
 end
 
+local function merge_features(feats)
+    feats = feats or features()
+    U.merge(feats, U["BR_MAIN"], { no_edit = true, keep_branch = true })
+end
+
 return U
