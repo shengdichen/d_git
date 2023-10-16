@@ -116,6 +116,26 @@ local function rework_commit(mode, target)
     util.rebase(target .. "~")
 end
 
+local function transplant(commit, branch)
+    local action = "transplant"
+    if not branch then
+        util.printer("prompt", {
+            action = action,
+            text = "Onto branch: choose existing (default); <enter_new_branchname> "
+        })
+        local input = io.read()
+        if input == "" then
+            branch = util.select_branch({ fzf = true, filter = U["FEATURE"] })
+        else
+            branch = input
+            U.exec_git("br " .. branch .. " " .. U["BR_MAIN"])
+        end
+    end
+    commit = commit or util.retval("git rev-parse HEAD")
+
+    util.transplant(commit, branch)
+end
+
 local function loop()
     while true do
         util.printer(
