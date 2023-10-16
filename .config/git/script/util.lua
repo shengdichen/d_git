@@ -1,6 +1,7 @@
 local U = {}
 
 U["BR_MAIN"] = "main"
+U["BR_MAIN_REMOTE"] = "origin/" .. U["BR_MAIN"]
 U["BR_PREV"] = "@{-1}"
 U["USER"] = "shc"
 U["FEATURE"] = U["USER"] .. "/"
@@ -281,6 +282,18 @@ U.merge_features = function(feats)
         U.merge(feats, U["BR_MAIN"], { no_edit = true, keep_branch = true })
     end
     )
+end
+
+U.transplant = function(commit, branch)
+    U.do_within_stash(function()
+        U.exec_git({
+            "co " .. branch,
+            "cp " .. commit,
+            "branch -f " .. U["BR_MAIN"] .. " " .. U["BR_MAIN_REMOTE"]
+        })
+    end
+    )
+    U.merge_features()
 end
 
 return U
