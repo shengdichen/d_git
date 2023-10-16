@@ -214,7 +214,7 @@ U.rebase = function(base, cmd_extra)
     end)
 end
 
-U.merge = function(br, base)
+U.merge = function(br, base, args)
     if br == base then
         print("On " .. base .. " already, done!")
         return
@@ -227,10 +227,17 @@ U.merge = function(br, base)
             end
             for _, b in ipairs(br) do
                 U.exec_git({ "co " .. base })
-                if not os.execute("git merge --no-ff " .. b) then
+                if not os.execute(
+                        "git merge " ..
+                        (args and args["no_edit"] and "--no-edit " or "") ..
+                        "--no-ff " ..
+                        b
+                    ) then
                     U.exec_git({ "merge --abort", "co " .. U.BR_PREV })
                 else
-                    U.exec_git({ "br -d " .. b })
+                    if not (args and args["keep_branch"]) then
+                        U.exec_git({ "br -d " .. b })
+                    end
                 end
             end
         end
