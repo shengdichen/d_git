@@ -176,6 +176,8 @@ local function main(arg)
         merge(arg[2], arg[3])
     elseif arg[1] == "ma" then
         util.merge_features()
+    elseif arg[1] == "mr" then
+        util.rebuild()
     elseif arg[1] == "bf" then
         rebranch(arg[2])
     elseif arg[1] == "cc" then

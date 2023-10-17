@@ -80,6 +80,10 @@ U.branchname = function(commit)
     return retval("git rev-parse --abbrev-ref " .. commit)
 end
 
+U.commithash = function(branch)
+    return retval("git rev-parse " .. branch)
+end
+
 U.need_stash = function()
     -- stashing will forget the currently staged
     if U.check_tree("dc") then
@@ -113,11 +117,15 @@ U.select_branch = function(args)
     local cmds = {}
 
     local containing = args and args["containing"]
+    local pointing = args and args["pointing"]
+    local cmd_git = "git br -a  --no-color --no-column"
     if containing then
-        table.insert(cmds, "git br --contains " .. containing)
-    else
-        table.insert(cmds, "git br -a  --no-color --no-column")
+        cmd_git = cmd_git .. " --contains " .. containing
     end
+    if pointing then
+        cmd_git = cmd_git .. " --points-at " .. pointing
+    end
+    table.insert(cmds, cmd_git)
 
     local br_filter = args and args["filter"]
     if br_filter then
@@ -295,15 +303,49 @@ local function branches_containing(commit)
     return U.select_branch({ multi = true, containing = commit })
 end
 
+local function branches_pointing(commit)
+    return U.select_branch({ multi = true, pointing = commit })
+end
+
 local function features_containing(commit)
     return U.select_branch({ multi = true, containing = commit, filter = U["FEATURE"] })
 end
 
-U.transplant = function(commit, branch)
+local function do_on_branch(branch, f)
+    local treeish_initial = retval("git branch --show-current")
+    if not treeish_initial then -- detached head
+        treeish_initial = U.commithash("HEAD")
+    end
+
+    U.do_within_stash(function()
+        U.exec_git({ "co " .. branch })
+        f()
+        U.exec_git({ "co " .. treeish_initial })
+    end
+    )
+end
+
+local function drop(commit, branch)
+    local branch_top = U.commithash(branch)
+    U.exec_git({ "co " .. U["BR_MAIN"], "br -f " .. branch .. " " .. commit .. "~", })
+    do_on_branch(branch, function()
+        U.exec_git({
+            "cp " .. commit .. " " .. branch_top,
+        })
+    end)
+end
+
+local function append(commit, branch)
+    do_on_branch(branch, function()
+        U.exec_git({
+            "cp " .. commit,
+        })
+    end)
+end
+
+U.rebuild = function()
     U.do_within_stash(function()
         U.exec_git({
-            "co " .. branch,
-            "cp " .. commit,
             "branch -f " .. U["BR_MAIN"] .. " " .. U["BR_MAIN_REMOTE"]
         })
     end
