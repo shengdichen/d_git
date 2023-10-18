@@ -3,6 +3,7 @@ local U = {}
 U["BR_MAIN"] = "main"
 U["BR_MAIN_REMOTE"] = "origin/" .. U["BR_MAIN"]
 U["BR_PREV"] = "@{-1}"
+U["BR_TMP"] = "__TMP"
 U["USER"] = "shc"
 U["FEATURE"] = U["USER"] .. "/"
 
@@ -309,6 +310,64 @@ end
 
 local function features_containing(commit)
     return U.select_branch({ multi = true, containing = commit, filter = U["FEATURE"] })
+end
+
+local function rehead(br_from, target)
+    local action = "rehead"
+    local br_tmp = U["BR_TMP"]
+
+    U.exec_git({
+        "cb " .. br_tmp,
+        "br -f " .. br_from .. " " .. target,
+    })
+    if U.need_stash() then
+        U.printer("prompt", {
+            action = action,
+            text = "Tree dirty, what now? stash (default); [q]uit "
+        })
+        local input = io.read()
+        if input == "" then
+            U.printer("prompt", { action = action, text = "Stashed, remember to unstash later" })
+            -- if detached_head: switch; prompt: create branch?
+            -- if on branch: count n_branches_pointing, if only tmp, prompt
+            U.exec_git({ "co " .. br_from, })
+        else
+            U.printer("giveup", { action = action })
+        end
+    end
+
+    U.exec_git({
+        "br -D " .. br_tmp
+    })
+end
+
+U.rebranch = function(br_from, target)
+    local action = "rebranch"
+    local commit = U.commithash(br_from)
+    if #branches_pointing(commit) == 1 then
+        U.printer(
+            "prompt",
+            {
+                action = action,
+                text = "Commit will be lost after rebranching, attach new branch? [n]o; <branch_name>"
+            }
+        )
+        local input = io.read()
+        if input ~= "n" then
+            local br_new = input == "" and U.BR_TMP or input
+            U.exec_git("br " .. br_new)
+        end
+    end
+    local br_curr = U.branchname("HEAD")
+    br_from = br_from or U.select_branch()
+    target = target or U.select_commit()
+
+    if br_from == br_curr then
+        rehead(target)
+    else
+        U.exec_git("br -f " .. br_from .. " " .. target)
+    end
+    U.exec_git("alo")
 end
 
 local function do_on_branch(branch, f)

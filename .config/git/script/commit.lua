@@ -3,20 +3,10 @@ package.path = package.path .. ";" .. SCRIPT_DIR .. "?.lua"
 local util = require("util")
 
 local function rehead(target)
-    local br_tmp = "__TMP"
     local br_from = util.branchname("HEAD")
     target = target or util.select_commit()
 
-    util.exec_git({
-        "cb " .. br_tmp,
-        "br -f " .. br_from .. " " .. target,
-    })
-    util.do_within_stash(
-        function() util.exec_git({ "co " .. br_from, }) end
-    )
-    util.exec_git({
-        "br -D " .. br_tmp
-    })
+    util.rehead(br_from, target)
 end
 
 local function merge(br, base)
