@@ -412,4 +412,14 @@ U.rebuild = function()
     U.merge_features()
 end
 
+U.transplant = function(commit, branch_from, branch_to)
+    append(commit, branch_to)
+    drop(commit, branch_from)
+
+    -- for _, br in ipairs(branches_containing(commit)) do
+    --     print(br)
+    -- end
+    -- print(#branches_containing(commit))
+end
+
 return U
