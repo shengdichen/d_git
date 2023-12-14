@@ -121,7 +121,7 @@ local function transplant(commit, branch)
             U.exec_git("br " .. branch .. " " .. U["BR_MAIN"])
         end
     end
-    commit = commit or util.retval("git rev-parse HEAD")
+    local commit = commit or util.retval("git rev-parse HEAD")
 
     util.transplant(commit, branch)
 end
@@ -145,6 +145,7 @@ local function loop()
             util.add_p()
         elseif input == "ci" then
             commit()
+            util.transplant()
         elseif input == "r" or input == "re" then
             util.rebase()
         elseif input == "m" or input == "me" then
@@ -159,6 +160,26 @@ local function loop()
             util.printer("huh", { input = input })
         end
     end
+end
+
+local function recommit()
+    local action = "recommit"
+
+    util.printer("prompt", { action = action, text = "Select commit" })
+    io.read()
+    local c = util.select_commit()
+
+    util.printer("prompt", { action = action, text = "From branch" })
+    io.read()
+    local branch_from = util.select_branch({ containing = c, fzf = true })
+
+    util.printer("prompt", { action = action, text = "To branch" })
+    io.read()
+    local branch_to = util.select_branch({ filter = util["FEATURE"], fzf = true })
+
+    print(c, branch_from, branch_to)
+
+    util.transplant(c, branch_from, branch_to)
 end
 
 local function main(arg)
@@ -181,7 +202,8 @@ local function main(arg)
     elseif arg[1] == "ri" then
         util.rebase()
     else
-        loop()
+        rebranch()
+        -- loop()
     end
 end
 main(arg)
