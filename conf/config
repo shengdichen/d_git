@@ -1,5 +1,5 @@
 [Include]
-path = conf/id.conf
+path = id.conf
 
 [Include]
 path = conf/general.conf
